@@ -15,17 +15,17 @@ pub const Options = struct {
         };
     }
 
-    /// Create the `bit_tree` module in the caller's build graph.
+    /// Create the `bit_structs` module in the caller's build graph.
     ///
     /// Intended for parent packages that want a single shared instance:
     /// ```zig
-    /// const bit_tree_mod = (@import("bit_tree").Options{
+    /// const bit_structs_mod = (@import("bit_structs").Options{
     ///     .target = target,
     ///     .optimize = optimize,
     /// }).getModule(b);
     /// ```
     /// Uses `dependencyFromBuildZig` so source paths stay correct when
-    /// called from a parent build via `@import("bit_tree")`.
+    /// called from a parent build via `@import("bit_structs")`.
     pub fn getModule(self: Options, b: *std.Build) *std.Build.Module {
         const target = self.target orelse b.standardTargetOptions(.{});
         const optimize = self.optimize orelse b.standardOptimizeOption(.{});
@@ -47,7 +47,7 @@ pub const Options = struct {
     }
 };
 
-/// Create the `bit_tree` module in the *own* package graph (standalone `zig build`).
+/// Create the `bit_structs` module in the *own* package graph (standalone `zig build`).
 /// Same wiring as `Options.getModule` but uses `b.path` (valid only for own build).
 fn createModuleOwn(b: *std.Build, options: Options) *std.Build.Module {
     const target = options.target orelse b.standardTargetOptions(.{});
@@ -56,7 +56,7 @@ fn createModuleOwn(b: *std.Build, options: Options) *std.Build.Module {
         .target = target,
         .optimize = optimize,
     }).module("bit_word");
-    const mod = b.addModule("bit_tree", .{
+    const mod = b.addModule("bit_structs", .{
         .root_source_file = b.path("src/root.zig"),
         .target = target,
         .optimize = optimize,

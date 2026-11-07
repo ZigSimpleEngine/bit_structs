@@ -1,7 +1,7 @@
 .{
-    .name = .bit_tree,
+    .name = .bit_structs,
     .version = "0.0.1",
-    .fingerprint = 0x5548e79411b36512,
+    .fingerprint = 0x358a4d7111b36512,
     .minimum_zig_version = "0.17.0",
     .dependencies = .{
         .bit_word = .{
