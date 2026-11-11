@@ -76,23 +76,8 @@ pub fn build(b: *std.Build) void {
     const bit_word_mod = mod.import_table.get("bit_word").?;
 
     const test_step = b.step("test", "Run unit tests");
-    for ([_][]const u8{
-        "src/bitset.zig",
-        "src/layer.zig",
-        "src/bit_tree.zig",
-    }) |src| {
-        const unit_tests = b.addTest(.{
-            .root_module = b.createModule(.{
-                .root_source_file = b.path(src),
-                .target = target,
-                .optimize = optimize,
-                .imports = &.{
-                    .{ .name = "bit_word", .module = bit_word_mod },
-                },
-            }),
-        });
-        test_step.dependOn(&b.addRunArtifact(unit_tests).step);
-    }
+    const unit_tests = b.addTest(.{ .root_module = mod });
+    test_step.dependOn(&b.addRunArtifact(unit_tests).step);
 
     const bench_bit_tree_exe = b.addExecutable(.{
         .name = "bench_bit_tree",

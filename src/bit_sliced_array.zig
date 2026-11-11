@@ -423,7 +423,11 @@ fn testAgainstReference(comptime wt: WordType, comptime Col: type, count: usize)
             var w_vec: usize = 0;
             while (w_vec + 4 <= arr.words_count) : (w_vec += 4) {
                 const vec = arr.getMaskVector(cmp, 4, @intCast(w_vec), &rhs_vec);
-                for (0..4) |k| try std.testing.expectEqual(out_scalar[w_vec + k], vec[k]);
+                // This Zig version does not allow runtime vector indices, go through an array.
+                const lanes: [4]Arr.Word = vec;
+                for (lanes, 0..) |lane_mask, k| {
+                    try std.testing.expectEqual(out_scalar[w_vec + k], lane_mask);
+                }
             }
 
             for (0..arr.words_count) |w| {
